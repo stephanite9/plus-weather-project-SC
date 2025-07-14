@@ -33,9 +33,9 @@ def convert_date(iso_string):
     nice_date = datetime.fromisoformat(raw_datetime)
 
     year = nice_date.year
-    month = nice_date.strftime("%B")
-    day = str(nice_date.day).zfill(2)
-    day_index = nice_date.weekday()
+    month = nice_date.strftime("%B") #get month as word
+    day = str(nice_date.day).zfill(2) #get day and make minimum 2 digits long ie. add 0 to single digit numbers
+    day_index = nice_date.weekday() #use weekday() to return day of week as integer
     # print(day_index)
 
     days = [
@@ -48,7 +48,7 @@ def convert_date(iso_string):
         "Sunday",
     ]
     
-    day_of_week = days[day_index]
+    day_of_week = days[day_index] #using the weekday() result, index name of day in list
 
     # print(f"---- {day_of_week} {day} {month} {year} ----")
     return (f"{day_of_week} {day} {month} {year}")
@@ -101,7 +101,16 @@ def calculate_mean(weather_data):
     # total_max = sum(weather_data_max)
 
     if all(isinstance(item, str) for item in weather_data): #checks if all values in list are string
-        weather_data_list = [int(value) for value in weather_data]
+        #weather_data_list = [int(value) for value in weather_data]
+        weather_data_list = [float(value) for value in weather_data]
+
+        #float(weather_data_list) - this does not work because it is a list of values 
+        float_list = []
+        for val in weather_data_list:
+            float_list.append(float(val))
+
+            
+        float_list = [float(val) for val in weather_data_list]
 
     else:
         weather_data_list = weather_data
@@ -110,7 +119,7 @@ def calculate_mean(weather_data):
     
     sum_weather_data = sum(weather_data_list) #sum all elements in list
 
-    mean_weather = float(sum_weather_data) / float(num_elements) #calc mean
+    mean_weather = float(sum_weather_data / num_elements) #calc mean
 
     return mean_weather
    
@@ -140,14 +149,15 @@ def load_data_from_csv(csv_file):
     
     with open(csv_file) as csv_data:
         csv_reader = csv.reader(csv_data) #or dict.reader, using "date" "min" "max"???
-        next(csv_reader) #need to skip empty rows
+        next(csv_reader) #need to skip empty row header
 
-    for rows in csv_reader:
-        if rows != []: #catch empty rows
+    for row in csv_reader:
+        if row != []: #catch empty rows
             
-            date = rows[0]
-            min = rows[1]
-            max = rows[2]
+            date = row[0]
+            min = row[1]
+            max = row[2]
+            print([date, min , max])
 
     print([
         [date, min, max]
@@ -169,8 +179,8 @@ def find_min(weather_data):
 
     else:
 
-        min_temp = float(min(weather_data))
-        index_min_temp = len(weather_data) - weather_data[::-1].index(min(weather_data)) - 1
+        min_temp = float(min(weather_data)) #find minimum using min() and then change to float
+        index_min_temp = len(weather_data) - weather_data[::-1].index(min(weather_data)) - 1 #(count elements in list) - (invert list, then return index of min number) - (minus 1 because list flipped)
         return min_temp, index_min_temp
      
 
@@ -206,7 +216,19 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    
+
+example_one = [
+            ["2021-07-02T07:00:00+08:00", 49, 67],
+            ["2021-07-03T07:00:00+08:00", 57, 68],
+            ["2021-07-04T07:00:00+08:00", 56, 62],
+            ["2021-07-05T07:00:00+08:00", 55, 61],
+            ["2021-07-06T07:00:00+08:00", 53, 62]
+        ]
+
+with open("tests/expected_output/example_one_summary.txt", encoding="utf8") as txt_file:
+    expected_result = txt_file.read()
+result = generate_summary(example_one)
+print(expected_result, result)
 
 
 def generate_daily_summary(weather_data):
