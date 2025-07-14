@@ -12,11 +12,13 @@ def format_temperature(temp):
         temp: A string representing a temperature.
     Returns:
         A string contain the temperature and "degrees Celcius."
-    """
+    """    
     return f"{temp}{DEGREE_SYMBOL}"
 
 
 def convert_date(iso_string):
+    import calendar
+    
     """Converts and ISO formatted date into a human-readable format.
 
     Args:
@@ -24,7 +26,40 @@ def convert_date(iso_string):
     Returns:
         A date formatted like: Weekday Date Month Year e.g. Tuesday 06 July 2021
     """
-    pass
+    #datetime()
+    #fromisoformat < use this one
+    #weekday() is a FUNCTION!!!
+    raw_datetime = iso_string
+    nice_date = datetime.fromisoformat(raw_datetime)
+
+    year = nice_date.year
+    month = nice_date.strftime("%B")
+    day = str(nice_date.day).zfill(2)
+    day_index = nice_date.weekday()
+    # print(day_index)
+
+    days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
+    
+    day_of_week = days[day_index]
+
+    # print(f"---- {day_of_week} {day} {month} {year} ----")
+    return (f"{day_of_week} {day} {month} {year}")
+
+# raw_datetime = "2021-10-31T07:00:00+08:00"
+# expected_result = "Sunday 31 October 2021"
+# result = convert_date(raw_datetime)
+# print(result, "||", expected_result)
+
+
+
 
 
 def convert_f_to_c(temp_in_fahrenheit):
@@ -35,7 +70,20 @@ def convert_f_to_c(temp_in_fahrenheit):
     Returns:
         A float representing a temperature in degrees Celcius, rounded to 1 decimal place.
     """
-    pass
+    temp_in_celsius = (float(temp_in_fahrenheit) - 32) * (5/9)
+    temp_in_celsius_round = round((temp_in_celsius),1)
+    return temp_in_celsius_round
+
+# temp_in_f = 90
+# expected_result = 32.2
+# result = convert_f_to_c(temp_in_f)
+# print(result, expected_result)
+
+# temp_in_f = "77"
+# expected_result = 25.0
+# result = convert_f_to_c(temp_in_f)
+# print(result, expected_result)
+
 
 
 def calculate_mean(weather_data):
@@ -46,8 +94,40 @@ def calculate_mean(weather_data):
     Returns:
         A float representing the mean value.
     """
-    pass
 
+    # weather_data_min = weather_data #min column[]
+    # weather_data_max = [max_list]
+    # total_min = sum(weather_data_min)
+    # total_max = sum(weather_data_max)
+
+    if all(isinstance(item, str) for item in weather_data): #checks if all values in list are string
+        weather_data_list = [int(value) for value in weather_data]
+
+    else:
+        weather_data_list = weather_data
+
+    num_elements = len(weather_data_list) #count number of elements in list
+    
+    sum_weather_data = sum(weather_data_list) #sum all elements in list
+
+    mean_weather = float(sum_weather_data) / float(num_elements) #calc mean
+
+    return mean_weather
+   
+# weather_data = [49, 57, 56, 55, 53]
+# expected_result = 54
+# result = calculate_mean(weather_data)
+# print(result, expected_result)
+
+# weather_data = [51.0, 58.2, 59.9, 52.4, 52.1, 48.4, 47.8, 53.43]
+# expected_result = 52.90375
+# result = calculate_mean(weather_data)
+# print(result, expected_result)
+
+weather_data = ["51", "58", "59", "52", "52", "48", "47", "53"]
+expected_result = 52.5
+result = calculate_mean(weather_data)
+print(result, expected_result)
 
 def load_data_from_csv(csv_file):
     """Reads a csv file and stores the data in a list.
@@ -57,8 +137,24 @@ def load_data_from_csv(csv_file):
     Returns:
         A list of lists, where each sublist is a (non-empty) line in the csv file.
     """
-    pass
+    
+    with open(csv_file) as csv_data:
+        csv_reader = csv.reader(csv_data) #or dict.reader, using "date" "min" "max"???
+        next(csv_reader) #need to skip empty rows
 
+    for rows in csv_reader:
+        if rows != []: #catch empty rows
+            
+            date = rows[0]
+            min = rows[1]
+            max = rows[2]
+
+    print([
+        [date, min, max]
+    ])
+
+# result = load_data_from_csv("tests/data/example_one.csv")
+# print(result, example_one)
 
 def find_min(weather_data):
     """Calculates the minimum value in a list of numbers.
@@ -68,7 +164,15 @@ def find_min(weather_data):
     Returns:
         The minimum value and it's position in the list. (In case of multiple matches, return the index of the *last* example in the list.)
     """
-    pass
+    if len(weather_data) == 0:
+        return ()
+
+    else:
+
+        min_temp = float(min(weather_data))
+        index_min_temp = len(weather_data) - weather_data[::-1].index(min(weather_data)) - 1
+        return min_temp, index_min_temp
+     
 
 
 def find_max(weather_data):
@@ -79,7 +183,19 @@ def find_max(weather_data):
     Returns:
         The maximum value and it's position in the list. (In case of multiple matches, return the index of the *last* example in the list.)
     """
-    pass
+
+    if len(weather_data) == 0:
+        return ()
+    
+    else:
+        max_temp = float(max(weather_data))
+        index_max_temp = len(weather_data) - weather_data[::-1].index(max(weather_data)) - 1
+        return max_temp, index_max_temp
+    
+temperatures = [10.4, 14.5, 12.9, 8.9, 10.5, 11.7]
+expected_result = (14.5, 1)
+result = find_max(temperatures)
+print(result, expected_result)
 
 
 def generate_summary(weather_data):
@@ -90,7 +206,7 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    pass
+    
 
 
 def generate_daily_summary(weather_data):
