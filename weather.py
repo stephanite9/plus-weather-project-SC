@@ -147,24 +147,41 @@ def load_data_from_csv(csv_file):
         A list of lists, where each sublist is a (non-empty) line in the csv file.
     """
     
-    with open(csv_file) as csv_data:
-        csv_reader = csv.reader(csv_data) #or dict.reader, using "date" "min" "max"???
-        next(csv_reader) #need to skip empty row header
+    with open(csv_file, 'r', newline='') as csv_data:
+        csv_reader = csv.reader(csv_data) 
+        next(csv_reader) #need to skip row header
 
-    for row in csv_reader:
-        if row != []: #catch empty rows
-            
-            date = row[0]
-            min = row[1]
-            max = row[2]
-            print([date, min , max])
+        #make new list to store the csv data as per David's example
+        raw_weather_data = []
+            # for val in csv_reader:
+            #     weather_data.append(float(val))
 
-    print([
-        [date, min, max]
-    ])
+        for row in csv_reader:
+            if row != []: #catch empty rows
+                # for val in row[1] and row[2]:
+                #     return float(val)
+                raw_weather_data.append(row)
+        # print(raw_weather_data)
 
-# result = load_data_from_csv("tests/data/example_one.csv")
-# print(result, example_one)
+    int_weather_data = []
+    for row in raw_weather_data:
+        row[0] = datetime.fromisoformat(row[0]) #CONVERT TO ISO FORMAT DATETIME!!!!
+        row[1] = int(row[1])
+        row[2] = int(row[2])
+        int_weather_data.append(row)
+
+    print(int_weather_data)
+
+    # for row in int_weather_data:
+    #     if row != []:
+    #         print(row)
+
+              
+        
+    #print([date, min , max])
+
+result = load_data_from_csv("tests/data/example_one.csv")
+print(result)
 
 def find_min(weather_data):
     """Calculates the minimum value in a list of numbers.
