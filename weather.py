@@ -133,10 +133,10 @@ def calculate_mean(weather_data):
 # result = calculate_mean(weather_data)
 # print(result, expected_result)
 
-weather_data = ["51", "58", "59", "52", "52", "48", "47", "53"]
-expected_result = 52.5
-result = calculate_mean(weather_data)
-print(result, expected_result)
+# weather_data = ["51", "58", "59", "52", "52", "48", "47", "53"]
+# expected_result = 52.5
+# result = calculate_mean(weather_data)
+# print(result, expected_result)
 
 def load_data_from_csv(csv_file):
     """Reads a csv file and stores the data in a list.
@@ -170,7 +170,7 @@ def load_data_from_csv(csv_file):
         row[2] = int(row[2])
         int_weather_data.append(row)
 
-    print(int_weather_data)
+    # print(int_weather_data)
     return int_weather_data
 
     # for row in int_weather_data:
@@ -181,8 +181,8 @@ def load_data_from_csv(csv_file):
         
     #print([date, min , max])
 
-result = load_data_from_csv("tests/data/example_one.csv")
-print(result)
+# result = load_data_from_csv("tests/data/example_one.csv")
+# print(result)
 
 def find_min(weather_data):
     """Calculates the minimum value in a list of numbers.
@@ -220,10 +220,10 @@ def find_max(weather_data):
         index_max_temp = len(weather_data) - weather_data[::-1].index(max(weather_data)) - 1
         return max_temp, index_max_temp
     
-temperatures = [10.4, 14.5, 12.9, 8.9, 10.5, 11.7]
-expected_result = (14.5, 1)
-result = find_max(temperatures)
-print(result, expected_result)
+# temperatures = [10.4, 14.5, 12.9, 8.9, 10.5, 11.7]
+# expected_result = (14.5, 1)
+# result = find_max(temperatures)
+# print(result, expected_result)
 
 
 def generate_summary(weather_data):
@@ -234,6 +234,34 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
+    max_list = []
+    min_list = []
+    date_list = []
+
+    for row in weather_data:
+        max_list.append(row[2])
+        min_list.append(row[1])
+        date_list.append(row[0])
+
+
+
+    daily_max = max(max_list)
+    daily_min = min(min_list)
+
+    index_max = max_list.index(daily_max)
+
+    print(daily_max, index_max)
+
+    degc_max = format_temperature(daily_max)
+    degc_min = format_temperature(daily_min)
+
+
+    # print("#-" * 50)
+
+    # print(degc_max)
+    # print(degc_min)
+
+    # print("#-" * 50)
 
 example_one = [
             ["2021-07-02T07:00:00+08:00", 49, 67],
@@ -257,4 +285,23 @@ def generate_daily_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    pass
+    daily_summary = ""
+
+
+
+    for row in weather_data:
+        daily_summary += (f"---- {convert_date(row[0])} ----\n")
+        daily_summary += (f"  Minimum Temperature: {format_temperature(convert_f_to_c(row[1]))}\n")
+        daily_summary += (f"  Maximum Temperature: {format_temperature(convert_f_to_c(row[2]))}\n")
+        daily_summary += ("\n")
+
+    # print(daily_summary)
+    return daily_summary
+
+    
+# with open("tests/expected_output/example_one_daily_summary.txt", encoding="utf8") as txt_file:
+#     expected_result = txt_file.read()
+# result = generate_daily_summary(example_one)
+# print(expected_result, result)
+
+
