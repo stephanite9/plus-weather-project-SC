@@ -165,12 +165,13 @@ def load_data_from_csv(csv_file):
 
     int_weather_data = []
     for row in raw_weather_data:
-        row[0] = datetime.fromisoformat(row[0]) #CONVERT TO ISO FORMAT DATETIME!!!!
+        row[0] = (row[0]) #CONVERT TO ISO FORMAT DATETIME!? OR FORMAT INTO "TABLE"?!
         row[1] = int(row[1])
         row[2] = int(row[2])
         int_weather_data.append(row)
 
     print(int_weather_data)
+    return int_weather_data
 
     # for row in int_weather_data:
     #     if row != []:
