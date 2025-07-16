@@ -234,47 +234,66 @@ def generate_summary(weather_data):
     Returns:
         A string containing the summary information.
     """
-    max_list = []
-    min_list = []
     date_list = []
+    min_list = []
+    max_list = []
 
     for row in weather_data:
-        max_list.append(row[2])
-        min_list.append(row[1])
         date_list.append(row[0])
+        min_list.append(row[1])
+        max_list.append(row[2])
 
+    number_of_days = len(min_list)
 
-
-    daily_max = max(max_list)
     daily_min = min(min_list)
+    daily_max = max(max_list)
 
+    index_min = min_list.index(daily_min)
+    date_of_mintemp = date_list[index_min]
+    day_of_mintemp = convert_date(date_of_mintemp)
+    
     index_max = max_list.index(daily_max)
+    date_of_maxtemp = date_list[index_max]
+    day_of_maxtemp = convert_date(date_of_maxtemp)
+    
+    daily_min_degc = format_temperature(convert_f_to_c(daily_min))
+    daily_max_degc = format_temperature(convert_f_to_c(daily_max))
 
-    print(daily_max, index_max)
+    print(daily_min_degc, day_of_mintemp) #1
+    print(daily_max_degc, day_of_maxtemp) #2
 
-    degc_max = format_temperature(daily_max)
-    degc_min = format_temperature(daily_min)
+    mean_min = calculate_mean(min_list)
+    mean_max = calculate_mean(max_list)
+
+    mean_min_degc = format_temperature(convert_f_to_c(mean_min)) #3
+    mean_max_degc = format_temperature(convert_f_to_c(mean_max)) #4
+
+    print(mean_min_degc, mean_max_degc)
+
+    summary = ""
+
+    summary += (f"{number_of_days} Day Overview\n")
+    summary += (f"  The lowest temperature will be {daily_min_degc}, and will occur on {day_of_mintemp}.\n")
+    summary += (f"  The highest temperature will be {daily_max_degc}, and will occur on {day_of_maxtemp}.\n")
+    summary += (f"  The average low this week is {mean_min_degc}.\n")
+    summary += (f"  The average high this week is {mean_max_degc}.\n")
+
+    # print(summary)
+    return summary
 
 
-    # print("#-" * 50)
+# example_one = [
+#             ["2021-07-02T07:00:00+08:00", 49, 67],
+#             ["2021-07-03T07:00:00+08:00", 57, 68],
+#             ["2021-07-04T07:00:00+08:00", 56, 62],
+#             ["2021-07-05T07:00:00+08:00", 55, 61],
+#             ["2021-07-06T07:00:00+08:00", 53, 62]
+#         ]
 
-    # print(degc_max)
-    # print(degc_min)
-
-    # print("#-" * 50)
-
-example_one = [
-            ["2021-07-02T07:00:00+08:00", 49, 67],
-            ["2021-07-03T07:00:00+08:00", 57, 68],
-            ["2021-07-04T07:00:00+08:00", 56, 62],
-            ["2021-07-05T07:00:00+08:00", 55, 61],
-            ["2021-07-06T07:00:00+08:00", 53, 62]
-        ]
-
-with open("tests/expected_output/example_one_summary.txt", encoding="utf8") as txt_file:
-    expected_result = txt_file.read()
-result = generate_summary(example_one)
-print(expected_result, result)
+# with open("tests/expected_output/example_one_summary.txt", encoding="utf8") as txt_file:
+#     expected_result = txt_file.read()
+# result = generate_summary(example_one)
+# print(expected_result,result)
 
 
 def generate_daily_summary(weather_data):
@@ -286,8 +305,6 @@ def generate_daily_summary(weather_data):
         A string containing the summary information.
     """
     daily_summary = ""
-
-
 
     for row in weather_data:
         daily_summary += (f"---- {convert_date(row[0])} ----\n")
@@ -303,5 +320,4 @@ def generate_daily_summary(weather_data):
 #     expected_result = txt_file.read()
 # result = generate_daily_summary(example_one)
 # print(expected_result, result)
-
 
